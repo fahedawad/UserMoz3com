@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ListScreen">
+<androidx.cardview.widget.CardView
+    app:cardCornerRadius="15dp"
+    app:cardBackgroundColor="@color/colorPrimary"
+    android:elevation="10dp"
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <AutoCompleteTextView
+        android:padding="5dp"
+        android:background="@color/colorPrimary"
+        android:id="@+id/autoCompleteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textColor="#fff"
+        android:textColorHint="#fff"
+        android:hint="     بحث " />
+
+</androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/push"
+        android:text="طلب "
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/dd"
+        android:text="dd "
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rec"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
