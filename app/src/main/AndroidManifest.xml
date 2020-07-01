@@ -9,6 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".AllBillsForUser" />
+
         <activity android:name=".ListScreen"></activity>
         <activity android:name=".Verify_phone" />
         <activity android:name=".MainActivity">

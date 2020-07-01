@@ -26,6 +26,7 @@ import com.example.usermoz3com.Adapter.OrdarAdapter;
 import com.example.usermoz3com.Data.DataItem;
 import com.example.usermoz3com.Data.OrdarData;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,7 +50,7 @@ String numitem;
 AutoCompleteTextView completeTextView;
 List<String>strings;
 Double finalprice;
-public static Button order;
+public static FloatingActionButton order;
 private long backPressed;
 SharedPreference sharedPreference;
 SimpleDateFormat format;
@@ -70,6 +71,12 @@ ProgressDialog progressDialog;
         recyclerView =findViewById(R.id.rec);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
+        findViewById(R.id.profileUser).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ListScreen.this,AllBillsForUser.class));
+            }
+        });
         sharedPreference = new SharedPreference();
         format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         date =new Date();
