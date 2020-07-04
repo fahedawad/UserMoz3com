@@ -132,56 +132,84 @@ ProgressDialog progressDialog;
                            final int finalI = i;
                            reference.addListenerForSingleValueEvent(new ValueEventListener() {
                                @Override
-                               public void onDataChange(@NonNull DataSnapshot snapshot) {
+                               public void onDataChange(@NonNull final DataSnapshot snapshot) {
                                    if(snapshot.exists()) {
-                                       double oldcount = Double.parseDouble(snapshot.child("العدد").getValue(String.class) + "");
-                                       double currentcount = Double.parseDouble(ordarData.get(finalI).getConter() + "");
-                                       double newcount = oldcount + currentcount;
-                                       double oldtotal = Double.parseDouble(snapshot.child("المجموع").getValue(String.class) + "");
-                                       double currenttotal = Double.parseDouble(ordarData.get(finalI).getTotal() + "");
-                                       double newtotal = oldtotal + currenttotal;
-                                       HashMap<String, Object> hashMap = new HashMap<>();
-                                       hashMap.put("السعر", ordarData.get(finalI).getPrice());
-                                       hashMap.put("العدد", newcount + "");
-                                       hashMap.put("المجموع", newtotal + "");
-                                       hashMap.put("الضريبه", ordarData.get(finalI).getTax());
-                                       hashMap.put("نوع البيع", ordarData.get(finalI).getType());
-                                       reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
+                                       FirebaseDatabase.getInstance().getReference("item")
+                                               .child(ordarData.get(finalI).getName()).addListenerForSingleValueEvent(new ValueEventListener() {
                                            @Override
-                                           public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                               progressDialog.dismiss();
-                                               adapter.notifyDataSetChanged();
-                                               recyclerView.setAdapter(adapter);
-                                               order.setVisibility(View.GONE);
-                                               Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
-                                               dialog.dismiss();
-                                               sharedPreference.removeallFavorite(ListScreen.this);
-                                               FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
-                                                       .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+                                           public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                                               String purchasingprice = snapshot1.child("سعر الشراء").getValue(String.class);
+
+                                               double oldcount = Double.parseDouble(snapshot.child("العدد").getValue(String.class) + "");
+                                               double currentcount = Double.parseDouble(ordarData.get(finalI).getConter() + "");
+                                               double newcount = oldcount + currentcount;
+                                               double oldtotal = Double.parseDouble(snapshot.child("المجموع").getValue(String.class) + "");
+                                               double currenttotal = Double.parseDouble(ordarData.get(finalI).getTotal() + "");
+                                               double newtotal = oldtotal + currenttotal;
+                                               HashMap<String, Object> hashMap = new HashMap<>();
+                                               hashMap.put("السعر", ordarData.get(finalI).getPrice());
+                                               hashMap.put("العدد", newcount + "");
+                                               hashMap.put("المجموع", newtotal + "");
+                                               hashMap.put("الضريبه", ordarData.get(finalI).getTax());
+                                               hashMap.put("نوع البيع", ordarData.get(finalI).getType());
+                                               hashMap.put("سعر الشراء",purchasingprice+"");
+                                               reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
+                                                   @Override
+                                                   public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                                       progressDialog.dismiss();
+                                                       adapter.notifyDataSetChanged();
+                                                       recyclerView.setAdapter(adapter);
+                                                       order.setVisibility(View.GONE);
+                                                       Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
+                                                       dialog.dismiss();
+                                                       sharedPreference.removeallFavorite(ListScreen.this);
+                                                       FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
+                                                               .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+                                                   }
+                                               });
+                                           }
+
+                                           @Override
+                                           public void onCancelled(@NonNull DatabaseError error) {
                                            }
                                        });
+
                                    }
                                    else {
-                                       HashMap<String, Object> hashMap = new HashMap<>();
-                                       hashMap.put("السعر", ordarData.get(finalI).getPrice());
-                                       hashMap.put("العدد", ordarData.get(finalI).getConter());
-                                       hashMap.put("المجموع", ordarData.get(finalI).getTotal());
-                                       hashMap.put("الضريبه", ordarData.get(finalI).getTax());
-                                       hashMap.put("نوع البيع", ordarData.get(finalI).getType());
-                                       reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
+                                       FirebaseDatabase.getInstance().getReference("item")
+                                               .child(ordarData.get(finalI).getName()).addListenerForSingleValueEvent(new ValueEventListener() {
                                            @Override
-                                           public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                               progressDialog.dismiss();
-                                               adapter.notifyDataSetChanged();
-                                               recyclerView.setAdapter(adapter);
-                                               order.setVisibility(View.GONE);
-                                               Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
-                                               dialog.dismiss();
-                                               sharedPreference.removeallFavorite(ListScreen.this);
-                                               FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
-                                                       .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+                                           public void onDataChange(@NonNull DataSnapshot snapshot1) {
+                                               String purchasingprice = snapshot1.child("سعر الشراء").getValue(String.class);
+
+                                               HashMap<String, Object> hashMap = new HashMap<>();
+                                               hashMap.put("السعر", ordarData.get(finalI).getPrice());
+                                               hashMap.put("العدد", ordarData.get(finalI).getConter());
+                                               hashMap.put("المجموع", ordarData.get(finalI).getTotal());
+                                               hashMap.put("الضريبه", ordarData.get(finalI).getTax());
+                                               hashMap.put("نوع البيع", ordarData.get(finalI).getType());
+                                               hashMap.put("سعر الشراء",purchasingprice+"");
+                                               reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
+                                                   @Override
+                                                   public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                                       progressDialog.dismiss();
+                                                       adapter.notifyDataSetChanged();
+                                                       recyclerView.setAdapter(adapter);
+                                                       order.setVisibility(View.GONE);
+                                                       Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
+                                                       dialog.dismiss();
+                                                       sharedPreference.removeallFavorite(ListScreen.this);
+                                                       FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
+                                                               .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+                                                   }
+                                               });
+                                           }
+
+                                           @Override
+                                           public void onCancelled(@NonNull DatabaseError error) {
                                            }
                                        });
+
                                    }
 
                                }
