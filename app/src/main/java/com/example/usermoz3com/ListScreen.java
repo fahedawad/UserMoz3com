@@ -49,6 +49,7 @@ List<DataItem>search;
 String numitem;
 AutoCompleteTextView completeTextView;
 List<String>strings;
+String [] datanames;
 Double finalprice;
 public static FloatingActionButton order;
 private long backPressed;
@@ -165,18 +166,30 @@ ProgressDialog progressDialog;
         getData();
 
 
-        completeTextView =findViewById(R.id.autoCompleteTextView);
-        ArrayAdapter<String>adapter =new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,strings);
-        completeTextView.setAdapter(adapter);
+        completeTextView =findViewById(R.id.searchac);
         completeTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    search.clear();
-                    String itme = parent.getItemAtPosition(position).toString();
-                    dataItems.clear();
-//                    SearchData(itme);
+            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+
+                recyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        String selection = (String) parent.getItemAtPosition(position);
+                        int pos = -1;
+
+                        for (int i = 0; i < datanames.length; i++) {
+                            if (datanames[i].equals(selection)) {
+                                pos = i;
+                                break;
+                            }
+                        }
+                        System.out.println("Position " + pos);
+                        recyclerView.smoothScrollToPosition(pos);
+                    }
+                });
             }
         });
+
     }
 
 //    private void SearchData(String itme) {
@@ -234,6 +247,12 @@ ProgressDialog progressDialog;
                             adapter =new Adapter(dataItems,ListScreen.this);
                             recyclerView.setAdapter(adapter);
                         }
+                        System.out.println(strings);
+                        datanames = new String[strings.size()];
+                        datanames = strings.toArray(datanames);
+                        ArrayAdapter<String>adapter =new ArrayAdapter<String>(ListScreen.this,android.R.layout.simple_dropdown_item_1line,datanames);
+                        completeTextView.setThreshold(1);
+                        completeTextView.setAdapter(adapter);
                     }
 
                     @Override
