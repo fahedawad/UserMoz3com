@@ -78,6 +78,7 @@ ProgressDialog progressDialog;
                 startActivity(new Intent(ListScreen.this,AllBillsForUser.class));
             }
         });
+        getData();
         sharedPreference = new SharedPreference();
         format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         date =new Date();
@@ -126,28 +127,71 @@ ProgressDialog progressDialog;
                        progressDialog.show();
                        for (int i =0;i <arrayList.size();i++){
                            HashMap<String,Object> map =arrayList.get(i);
-                           DatabaseReference reference =FirebaseDatabase.getInstance().getReference("order").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                           final DatabaseReference reference =FirebaseDatabase.getInstance().getReference("order").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                    .child(datetxt).child(map.get("name")+"");
-                           HashMap<String,Object>hashMap =new HashMap<>();
-                           hashMap.put("السعر",ordarData.get(i).getPrice());
-                           hashMap.put("العدد",ordarData.get(i).getConter());
-                           hashMap.put("المجموع",ordarData.get(i).getTotal());
-                           hashMap.put("الضريبه",ordarData.get(i).getTax());
-                           hashMap.put("نوع البيع",ordarData.get(i).getType());
-                           reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
+                           final int finalI = i;
+                           reference.addListenerForSingleValueEvent(new ValueEventListener() {
                                @Override
-                               public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                   progressDialog.dismiss();
-                                   adapter.notifyDataSetChanged();
-                                   recyclerView.setAdapter(adapter);
-                                   order.setVisibility(View.GONE);
-                                   Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
-                                   dialog.dismiss();
-                                   sharedPreference.removeallFavorite(ListScreen.this);
-                                   FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
-                                           .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+                               public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                   if(snapshot.exists()) {
+                                       double oldcount = Double.parseDouble(snapshot.child("العدد").getValue(String.class) + "");
+                                       double currentcount = Double.parseDouble(ordarData.get(finalI).getConter() + "");
+                                       double newcount = oldcount + currentcount;
+                                       double oldtotal = Double.parseDouble(snapshot.child("المجموع").getValue(String.class) + "");
+                                       double currenttotal = Double.parseDouble(ordarData.get(finalI).getTotal() + "");
+                                       double newtotal = oldtotal + currenttotal;
+                                       HashMap<String, Object> hashMap = new HashMap<>();
+                                       hashMap.put("السعر", ordarData.get(finalI).getPrice());
+                                       hashMap.put("العدد", newcount + "");
+                                       hashMap.put("المجموع", newtotal + "");
+                                       hashMap.put("الضريبه", ordarData.get(finalI).getTax());
+                                       hashMap.put("نوع البيع", ordarData.get(finalI).getType());
+                                       reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
+                                           @Override
+                                           public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                               progressDialog.dismiss();
+                                               adapter.notifyDataSetChanged();
+                                               recyclerView.setAdapter(adapter);
+                                               order.setVisibility(View.GONE);
+                                               Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
+                                               dialog.dismiss();
+                                               sharedPreference.removeallFavorite(ListScreen.this);
+                                               FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
+                                                       .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+                                           }
+                                       });
+                                   }
+                                   else {
+                                       HashMap<String, Object> hashMap = new HashMap<>();
+                                       hashMap.put("السعر", ordarData.get(finalI).getPrice());
+                                       hashMap.put("العدد", ordarData.get(finalI).getConter());
+                                       hashMap.put("المجموع", ordarData.get(finalI).getTotal());
+                                       hashMap.put("الضريبه", ordarData.get(finalI).getTax());
+                                       hashMap.put("نوع البيع", ordarData.get(finalI).getType());
+                                       reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
+                                           @Override
+                                           public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                               progressDialog.dismiss();
+                                               adapter.notifyDataSetChanged();
+                                               recyclerView.setAdapter(adapter);
+                                               order.setVisibility(View.GONE);
+                                               Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
+                                               dialog.dismiss();
+                                               sharedPreference.removeallFavorite(ListScreen.this);
+                                               FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
+                                                       .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+                                           }
+                                       });
+                                   }
+
+                               }
+
+                               @Override
+                               public void onCancelled(@NonNull DatabaseError error) {
+
                                }
                            });
+
                        }
 
                    }
@@ -163,7 +207,7 @@ ProgressDialog progressDialog;
                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
            }
        });
-        getData();
+
 
 
         completeTextView =findViewById(R.id.searchac);
@@ -263,15 +307,13 @@ ProgressDialog progressDialog;
     }
     @Override
     public void onBackPressed() {
-        getData();
-        backPressed =System.currentTimeMillis();
-        completeTextView.setText("");
-        if (backPressed +2000 >System.currentTimeMillis()){
+        if (backPressed +2000 > System.currentTimeMillis()){
             super.onBackPressed();
+            return;
         }
         else {
             Toast.makeText(this, "أذا كنت تريد الخروج أضغط مره اخرى", Toast.LENGTH_SHORT).show();
         }
-
+        backPressed =System.currentTimeMillis();
     }
 }
