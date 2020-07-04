@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -29,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class Verify_phone extends AppCompatActivity {
     EditText editText ;
     Button button;
+    TextView title,change,timer;
     private  String verify,name,phonNumber;
     private  FirebaseAuth mauth;
 
@@ -38,6 +40,30 @@ public class Verify_phone extends AppCompatActivity {
         setContentView(R.layout.activity_verify_phone);
          mauth =FirebaseAuth.getInstance();
          phonNumber =getIntent().getStringExtra("num");
+         title =findViewById(R.id.title);
+         String p = phonNumber.substring(4,14);
+         title.setText("سوف يرسل MOZ3.COM رسالة "+"\n"+"نصية للتحقق من رقم هاتفك"+"\t"+"\t"+p);
+         timer =findViewById(R.id.timer);
+         CountDownTimer countDownTimer;
+         countDownTimer =new CountDownTimer(50000,1000) {
+             @Override
+             public void onTick(long millisUntilFinished) {
+                    timer.setText(millisUntilFinished/1000+"");
+             }
+
+             @Override
+             public void onFinish() {
+                 timer.setTextColor(Color.parseColor("#FFD50D0D"));
+                timer.setText("في حال لم يتم ارسال رسالة الى رقمك قم بتأكد من الرقم المدخل او شبكة الانترانت");
+             }
+         };
+         countDownTimer.start();
+         findViewById(R.id.change).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startActivity(new Intent(Verify_phone.this,MainActivity.class));
+             }
+         });
         System.out.println(phonNumber);
          name =getIntent().getStringExtra("name");
         editText =findViewById(R.id.verify);

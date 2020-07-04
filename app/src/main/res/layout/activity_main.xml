@@ -4,12 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:orientation="vertical"
+    android:background="@drawable/back"
     tools:context=".MainActivity" >
 
+    <TextView
+        android:textColor="#fff"
+        android:textSize="28dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="تسجيل الدخول"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+    </TextView>
 
     <EditText
+        android:background="#F1EAEA"
+        android:padding="11dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:id="@+id/phon"
@@ -19,6 +34,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <EditText
+
+        android:background="#fff"
+        android:padding="11dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:id="@+id/nameuser"
@@ -27,8 +45,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <Button
+        android:textStyle="bold"
+        android:background="#fff"
+        android:layout_marginTop="75dp"
         android:id="@+id/pushdata"
-        android:text="ادخال الصنف"
-        android:layout_width="match_parent"
+        android:text="دخول"
+        android:layout_width="250dp"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"/>
+    <TextView
+      android:textColor="#000"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:textStyle="bold"
+       android:text="BY:MOZ3.COM"
+        android:layout_marginTop="210dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </TextView>
 </LinearLayout>

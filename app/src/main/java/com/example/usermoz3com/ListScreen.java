@@ -78,6 +78,7 @@ ProgressDialog progressDialog;
                 startActivity(new Intent(ListScreen.this,AllBillsForUser.class));
             }
         });
+        dataItems = new ArrayList<>();
         getData();
         sharedPreference = new SharedPreference();
         format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
@@ -134,12 +135,16 @@ ProgressDialog progressDialog;
                                @Override
                                public void onDataChange(@NonNull final DataSnapshot snapshot) {
                                    if(snapshot.exists()) {
-                                       FirebaseDatabase.getInstance().getReference("item")
-                                               .child(ordarData.get(finalI).getName()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                       final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("item")
+                                               .child(ordarData.get(finalI).getName());
+                                         ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                            @Override
                                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
                                                String purchasingprice = snapshot1.child("سعر الشراء").getValue(String.class);
-
+                                               Double inventorycount = Double.parseDouble(snapshot1.child("العدد المتاح").getValue(String.class));
+                                               Double currentcounter = Double.parseDouble(ordarData.get(finalI).getConter());
+                                               Double newinventorycount = inventorycount-currentcounter;
+                                               ref.child("العدد المتاح").setValue(newinventorycount+"");
                                                double oldcount = Double.parseDouble(snapshot.child("العدد").getValue(String.class) + "");
                                                double currentcount = Double.parseDouble(ordarData.get(finalI).getConter() + "");
                                                double newcount = oldcount + currentcount;
@@ -149,7 +154,12 @@ ProgressDialog progressDialog;
                                                HashMap<String, Object> hashMap = new HashMap<>();
                                                hashMap.put("السعر", ordarData.get(finalI).getPrice());
                                                hashMap.put("العدد", newcount + "");
-                                               hashMap.put("المجموع", newtotal + "");
+                                               if(ordarData.get(finalI).getType().equals("كيلو")){
+                                                   hashMap.put("المجموع", "0.0");
+                                               }
+                                               else {
+                                                   hashMap.put("المجموع", newtotal + "");
+                                               }
                                                hashMap.put("الضريبه", ordarData.get(finalI).getTax());
                                                hashMap.put("نوع البيع", ordarData.get(finalI).getType());
                                                hashMap.put("سعر الشراء",purchasingprice+"");
@@ -176,16 +186,25 @@ ProgressDialog progressDialog;
 
                                    }
                                    else {
-                                       FirebaseDatabase.getInstance().getReference("item")
-                                               .child(ordarData.get(finalI).getName()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                       final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("item")
+                                               .child(ordarData.get(finalI).getName());
+                                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                            @Override
                                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
                                                String purchasingprice = snapshot1.child("سعر الشراء").getValue(String.class);
-
+                                               Double inventorycount = Double.parseDouble(snapshot1.child("العدد المتاح").getValue(String.class));
+                                               Double currentcounter = Double.parseDouble(ordarData.get(finalI).getConter());
+                                               Double newinventorycount = inventorycount-currentcounter;
+                                               ref.child("العدد المتاح").setValue(newinventorycount+"");
                                                HashMap<String, Object> hashMap = new HashMap<>();
                                                hashMap.put("السعر", ordarData.get(finalI).getPrice());
                                                hashMap.put("العدد", ordarData.get(finalI).getConter());
-                                               hashMap.put("المجموع", ordarData.get(finalI).getTotal());
+                                               if(ordarData.get(finalI).getType().equals("كيلو")){
+                                                   hashMap.put("المجموع", "0.0");
+                                               }
+                                               else {
+                                                   hashMap.put("المجموع", ordarData.get(finalI).getTotal()+"");
+                                               }
                                                hashMap.put("الضريبه", ordarData.get(finalI).getTax());
                                                hashMap.put("نوع البيع", ordarData.get(finalI).getType());
                                                hashMap.put("سعر الشراء",purchasingprice+"");
@@ -201,8 +220,11 @@ ProgressDialog progressDialog;
                                                        sharedPreference.removeallFavorite(ListScreen.this);
                                                        FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
                                                                .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+
                                                    }
                                                });
+
+
                                            }
 
                                            @Override
@@ -294,6 +316,8 @@ ProgressDialog progressDialog;
 //    }
 
     public void getData(){
+        dataItems.clear();
+        recyclerView.setAdapter(null);
         FirebaseDatabase.getInstance().getReference("item")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
