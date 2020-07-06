@@ -75,29 +75,26 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
                                 @Override
                                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    holder.checkBox.setChecked(false);
                                     Double inventorycount = Double.parseDouble(snapshot.getValue()+"");
                                     try {
                                         Double entrycount = Double.parseDouble(holder.count.getText()+"");
                                         if (entrycount>inventorycount){
                                             holder.count.setError("العدد المدخل اعلى من العدد الحالي في المتجر يرجى ادخال عدد اقل");
                                             holder.checkBox.setChecked(false);
-                                            sharedPreference.removeFavorite(context,sharedPreference.getFavoritewithname(context,dataItems.get(position).getName()));
-                                            System.out.println(dataItems.get(position).getName());
+                                            sharedPreference.getFavoritewithname(context,dataItems.get(position).getName());
+
                                         }
                                         else {
-                                            holder.checkBox.setChecked(true);
+                                            holder.checkBox.setChecked(false);
                                         }
                                     }
                                     catch (Exception e){
-                                        if ((dataItems.get(position).getName()+"" )!= null) {
-                                            sharedPreference.removeFavorite(context, sharedPreference.getFavoritewithname(context, dataItems.get(position).getName()+""));
-                                            System.out.println(dataItems.get(position).getName());
+                                        if ((dataItems.get(position).getName()+"" )!= null && (!holder.count.getText().toString().isEmpty())) {
+                                            sharedPreference.getFavoritewithname(context, dataItems.get(position).getName()+"");
                                         }
                                     }
-
-
                                 }
-
                                 @Override
                                 public void afterTextChanged(Editable s) {
                                     Double inventorycount = Double.parseDouble(snapshot.getValue()+"");
@@ -106,16 +103,19 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                                         if (entrycount>inventorycount){
                                             holder.count.setError("العدد المدخل اعلى من العدد الحالي في المتجر يرجى ادخال عدد اقل");
                                             holder.checkBox.setChecked(false);
-                                            sharedPreference.removeFavorite(context,sharedPreference.getFavoritewithname(context,dataItems.get(position).getName()));
+                                            sharedPreference.getFavoritewithname(context,dataItems.get(position).getName());
                                             System.out.println(dataItems.get(position).getName());
                                         }
                                         else {
-                                            holder.checkBox.setChecked(true);
+                                            holder.checkBox.setChecked(false);
+//                                            sharedPreference.getFavoritewithname(context, dataItems.get(position).getName());
+//                                            holder.checkBox.setChecked(true);
                                         }
                                     }
                                     catch (Exception e){
-                                        sharedPreference.removeFavorite(context,sharedPreference.getFavoritewithname(context,dataItems.get(position).getName()));
-                                        System.out.println(dataItems.get(position).getName());
+                                        if ((dataItems.get(position).getName()+"" )!= null && (!holder.count.getText().toString().isEmpty())) {
+                                            sharedPreference.getFavoritewithname(context, dataItems.get(position).getName());
+                                        }
                                     }
                                 }
                             });
@@ -152,9 +152,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
                         }
                     });
-
-
                 }
+
+                else {
+                    sharedPreference.getFavoritewithname(context, dataItems.get(position).getName());
+                }
+
             }
         });
     }

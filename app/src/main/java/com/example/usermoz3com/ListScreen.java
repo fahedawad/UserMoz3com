@@ -53,7 +53,7 @@ String [] datanames;
 Double finalprice;
 public static FloatingActionButton order;
 private long backPressed;
-SharedPreference sharedPreference;
+SharedPreference sharedPreference = new SharedPreference();
 SimpleDateFormat format;
 List<OrdarData>ordarData;
 Date date;
@@ -65,6 +65,7 @@ ProgressDialog progressDialog;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_screen);
+
         strings =new ArrayList<>();
         search =new ArrayList<>();
         progressDialog =new ProgressDialog(this);
@@ -80,7 +81,6 @@ ProgressDialog progressDialog;
         });
         dataItems = new ArrayList<>();
         getData();
-        sharedPreference = new SharedPreference();
         format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         date =new Date();
         datetxt =format.format(date);
@@ -318,8 +318,9 @@ ProgressDialog progressDialog;
     public void getData(){
         dataItems.clear();
         recyclerView.setAdapter(null);
+
         FirebaseDatabase.getInstance().getReference("item")
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot s1:dataSnapshot.getChildren()){
