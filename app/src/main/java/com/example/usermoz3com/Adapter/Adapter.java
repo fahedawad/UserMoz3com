@@ -141,8 +141,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                                 }catch (NullPointerException e){}
 
                                 hashMap.put("total",toloa);
-                                hashMap.put("tax",tax);
+                                hashMap.put("tax",dataItems.get(position).getTax());
                                 hashMap.put("type",dataItems.get(position).getType());
+                                System.out.println(dataItems.get(position).getTax());
                                 sharedPreference.addFavorite(context,hashMap);
                             }
                         }

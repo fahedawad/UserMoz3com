@@ -298,7 +298,7 @@ ProgressDialog progressDialog;
                                 numitem =s1.child("عدد الحبات داخل الكرتونه").getValue(String.class);
                                 dataItems.add(new DataItem(s1.getKey(),type,finalprice+"",img,"",tax));
                             }
-                           else { dataItems.add(new DataItem(s1.getKey(),type,price,img,"",""));}
+                           else {dataItems.add(new DataItem(s1.getKey(),type,price,img,"",tax));}
                             adapter =new Adapter(dataItems,ListScreen.this);
                             recyclerView.setAdapter(adapter);
                         }
