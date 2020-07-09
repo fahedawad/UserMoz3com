@@ -140,13 +140,13 @@ ProgressDialog progressDialog;
                                          ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                            @Override
                                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
-                                               String purchasingprice = snapshot1.child("سعر الشراء").getValue(String.class);
-                                               Double inventorycount = Double.parseDouble(snapshot1.child("العدد المتاح").getValue(String.class));
+                                               final String purchasingprice = snapshot1.child("سعر الشراء").getValue(String.class);
+                                               final Double inventorycount = Double.parseDouble(snapshot1.child("العدد المتاح").getValue(String.class));
                                                Double currentcounter = Double.parseDouble(ordarData.get(finalI).getConter());
                                                Double newinventorycount = inventorycount-currentcounter;
                                                ref.child("العدد المتاح").setValue(newinventorycount+"");
                                                double oldcount = Double.parseDouble(snapshot.child("العدد").getValue(String.class) + "");
-                                               double currentcount = Double.parseDouble(ordarData.get(finalI).getConter() + "");
+                                               final double currentcount = Double.parseDouble(ordarData.get(finalI).getConter() + "");
                                                double newcount = oldcount + currentcount;
                                                double oldtotal = Double.parseDouble(snapshot.child("المجموع").getValue(String.class) + "");
                                                double currenttotal = Double.parseDouble(ordarData.get(finalI).getTotal() + "");
@@ -170,13 +170,61 @@ ProgressDialog progressDialog;
                                                        adapter.notifyDataSetChanged();
                                                        recyclerView.setAdapter(adapter);
                                                        order.setVisibility(View.GONE);
-                                                       Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
-                                                       dialog.dismiss();
                                                        sharedPreference.removeallFavorite(ListScreen.this);
                                                        FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
                                                                .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+
+                                                       FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                           @Override
+                                                           public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                               if(snapshot.exists()){
+                                                                   Double old_count = Double.parseDouble(snapshot.child("العدد").getValue(String.class));
+                                                                   Double new_count = old_count+currentcount;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(new_count+"");
+                                                                   Double  old_inventory = Double.parseDouble(snapshot.child("العدد المتاح").getValue(String.class));
+                                                                   Double new_inventory = old_inventory-currentcount;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد المتاح").setValue(new_inventory+"");
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("سعر الشراء").setValue(purchasingprice);
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("سعر البيع").setValue(ordarData.get(finalI).getPrice());
+                                                                   Double total_purchasing_price = Double.parseDouble(purchasingprice)*currentcount;
+                                                                   Double purchasing_price_with_tax = (total_purchasing_price * Double.parseDouble(ordarData.get(finalI).getTax())) + total_purchasing_price;
+                                                                   Double total_selling_price = Double.parseDouble(ordarData.get(finalI).getPrice()) * currentcount;
+                                                                   Double selling_price_with_tax  = (total_selling_price*Double.parseDouble(ordarData.get(finalI).getTax())) + total_selling_price;
+                                                                   Double profit = selling_price_with_tax - purchasing_price_with_tax ;
+                                                                   Double old_profit = Double.parseDouble(snapshot.child("الربح").getValue(String.class));
+                                                                   Double new_profit = old_profit + profit ;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("الربح").setValue(new_profit+"");
+                                                                   Double old_total = Double.parseDouble(snapshot.child("المجموع").getValue(String.class));
+                                                                   Double new_total = old_total + selling_price_with_tax;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(new_total+"");
+
+                                                               }
+                                                               else {
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(currentcount+"");
+                                                                   Double new_inventory = inventorycount - currentcount;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد المتاح").setValue(new_inventory+"");
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("سعر الشراء").setValue(purchasingprice);
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("سعر البيع").setValue(ordarData.get(finalI).getPrice());
+                                                                   Double total_purchasing_price = Double.parseDouble(purchasingprice)*currentcount;
+                                                                   Double purchasing_price_with_tax = (total_purchasing_price * Double.parseDouble(ordarData.get(finalI).getTax())) + total_purchasing_price;
+                                                                   Double total_selling_price = Double.parseDouble(ordarData.get(finalI).getPrice()) * currentcount;
+                                                                   Double selling_price_with_tax  = (total_selling_price*Double.parseDouble(ordarData.get(finalI).getTax())) + total_selling_price;
+                                                                   Double profit = selling_price_with_tax - purchasing_price_with_tax ;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("الربح").setValue(profit+"");
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(selling_price_with_tax+"");
+                                                               }
+                                                           }
+
+                                                           @Override
+                                                           public void onCancelled(@NonNull DatabaseError error) {
+
+                                                           }
+                                                       });
+                                                       Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
+                                                       dialog.dismiss();
                                                    }
                                                });
+
                                            }
 
                                            @Override
@@ -315,6 +363,13 @@ ProgressDialog progressDialog;
 
                     }
                 });
+    }
+
+    public void upload_jard (final HashMap<String, Object> hashMap , String name){
+        format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        date =new Date();
+        datetxt =format.format(date);
+
     }
     @Override
     public void onBackPressed() {
