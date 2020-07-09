@@ -6,59 +6,82 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".ListScreen">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 <androidx.cardview.widget.CardView
-    app:cardCornerRadius="15dp"
-    app:cardBackgroundColor="@color/colorPrimary"
-    android:elevation="10dp"
+    app:cardCornerRadius="10dp"
     android:layout_margin="10dp"
+    app:cardBackgroundColor="#fff"
+    android:elevation="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <AutoCompleteTextView
-        android:padding="5dp"
-        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:background="#000"
         android:id="@+id/searchac"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textColor="#fff"
         android:textColorHint="#fff"
-        android:hint="بحث" />
+        android:hint="  بحث" />
 
 </androidx.cardview.widget.CardView>
 
-
-    <Button
-        android:id="@+id/dd"
-        android:text="dd "
-        android:visibility="gone"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_margin="2dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="150dp"/>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+<LinearLayout
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:layout_width="match_parent"
+    android:layout_height="50dp" >
+    <TextView
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="#000"
+        android:textSize="15dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="MOZ3.COM"
+        android:layout_marginTop="230dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/push"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:clickable="true"
             android:text="طلب "
-            android:visibility="gone"
+
+            android:elevation="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_baseline_add_24" />
+            app:srcCompat="@drawable/tracking" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/profileUser"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:clickable="true"
+           android:backgroundTint="#000"
+            app:srcCompat="@drawable/browser"
             android:text="طلب "
+            app:fabSize="normal"
+            android:elevation="10dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_house_24" />
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec"
@@ -69,4 +92,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </LinearLayout>

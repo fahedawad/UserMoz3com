@@ -6,9 +6,9 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-
+    android:background="#fff"
         android:elevation="10dp"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="5dp"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,56 +21,89 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="35dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="5dp"
                     android:text="الصنف"
-                    android:textColor="#000"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/textView2"
+                    android:textStyle="bold"
+                    android:id="@+id/item"
                     android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="5dp"
+                    android:textColor="#000"
+                    android:textSize="15dp" />
+
+
+
+                <TextView
                     android:text="السعر"
-                    android:textColor="#000"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/price"
                     android:layout_width="35dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="العدد"
                     android:textColor="#000"
                     android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="35dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+
+                <LinearLayout
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="5dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="العدد"
+                        android:textStyle="bold"
+                        android:id="@+id/count"
+                        android:layout_width="35dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:textColor="#000"
+                        android:textSize="15dp" />
+                    <TextView
+                        android:id="@+id/pases"
+                        android:visibility="gone"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:text="حبات"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000"
+                        android:textSize="12dp" />
+                </LinearLayout>
+
+                <TextView
                     android:text="المجموع"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
                     android:textColor="#000"
                     android:textSize="15dp" />
+                android:textSize="18sp" />
+                <TextView
+                    android:text="الوزن"
+                    android:textStyle="bold"
+                    android:id="@+id/weight"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="#000"
+                    android:textSize="18sp" />
+
             </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/orderrec"
@@ -85,7 +118,10 @@
                 android:orientation="horizontal">
 
                 <Button
-
+                    android:layout_margin="5dp"
+                    android:background="#000"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
                     android:id="@+id/ordernow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -93,8 +129,10 @@
                     android:text="أطلب الان" />
 
                 <Button
-
-
+                    android:layout_margin="5dp"
+                    android:background="#000"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
                     android:id="@+id/cancle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

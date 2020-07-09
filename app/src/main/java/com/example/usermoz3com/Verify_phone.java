@@ -3,6 +3,7 @@ package com.example.usermoz3com;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,12 +34,15 @@ public class Verify_phone extends AppCompatActivity {
     TextView title,change,timer;
     private  String verify,name,phonNumber;
     private  FirebaseAuth mauth;
+    ProgressDialog dialog ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_phone);
          mauth =FirebaseAuth.getInstance();
+         dialog =new ProgressDialog(this);
+         dialog.setMessage("جاري التحقق");
          phonNumber =getIntent().getStringExtra("num");
          title =findViewById(R.id.title);
          String p = phonNumber.substring(4,14);
@@ -78,6 +82,7 @@ public class Verify_phone extends AppCompatActivity {
                    editText.requestFocus();
                    return;
                }
+               dialog.show();
                 verifyCode(code);
             }
         });
@@ -115,6 +120,7 @@ public class Verify_phone extends AppCompatActivity {
                                 FirebaseDatabase.getInstance().getReference("user").child(id).setValue(hashMap);
                                 Intent intent =new Intent(Verify_phone.this,ListScreen.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                dialog.dismiss();
                                 startActivity(intent);
                             }else {
                                 System.out.println(task.getException().getMessage());

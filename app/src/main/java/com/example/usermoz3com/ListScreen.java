@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -25,6 +26,8 @@ import com.example.usermoz3com.Adapter.Adapter;
 import com.example.usermoz3com.Adapter.OrdarAdapter;
 import com.example.usermoz3com.Data.DataItem;
 import com.example.usermoz3com.Data.OrdarData;
+import com.example.usermoz3com.ViewPagerClass.Pager;
+import com.example.usermoz3com.ViewPagerClass.ViewPag;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +43,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
 
 public class ListScreen extends AppCompatActivity {
 RecyclerView recyclerView;
@@ -61,6 +65,11 @@ ArrayList<HashMap<String,Object>>arrayList;
 String datetxt;
     String tax;
 ProgressDialog progressDialog;
+    ViewPager viewPager;
+    ViewPag pag;
+    List<Pager>pagers;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,15 +93,12 @@ ProgressDialog progressDialog;
         format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         date =new Date();
         datetxt =format.format(date);
-        findViewById(R.id.dd).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent =new Intent(ListScreen.this,MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
+        viewPager =findViewById(R.id.viewPager);
+        pagers =new ArrayList<>();
+        pag =new ViewPag(this,pagers);
+        pagers.add(new Pager("id",R.drawable.p1));
+        pagers.add(new Pager("id",R.drawable.p2));
+        viewPager.setAdapter(pag);
         System.out.println(format.format(date)+"");
         LinearLayoutManager l =new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         GridLayoutManager gridLayoutManager =new GridLayoutManager(this,2);
@@ -100,12 +106,13 @@ ProgressDialog progressDialog;
         dataItems =new ArrayList<>();
         adapter =new Adapter(search,ListScreen.this);
        order= findViewById(R.id.push);
-       ordarData =new ArrayList<>();
+        ordarData =new ArrayList<>();
         sharedPreference.removeallFavorite(ListScreen.this);
-       order.setOnClickListener(new View.OnClickListener() {
+        order.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                ordarData.clear();
+
                     final Dialog dialog =new Dialog(ListScreen.this);
                     dialog.setContentView(R.layout.orderdialog);
                     final RecyclerView orderrec =dialog.findViewById(R.id.orderrec);
@@ -268,20 +275,31 @@ ProgressDialog progressDialog;
                                                        sharedPreference.removeallFavorite(ListScreen.this);
                                                        FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
                                                                .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
+
                                                    }
                                                });
+
+
                                            }
+
                                            @Override
                                            public void onCancelled(@NonNull DatabaseError error) {
                                            }
                                        });
+
                                    }
+
                                }
+
                                @Override
                                public void onCancelled(@NonNull DatabaseError error) {
+
                                }
                            });
+
                        }
+
+
                    }
                });
                cancle.setOnClickListener(new View.OnClickListener() {
@@ -295,6 +313,9 @@ ProgressDialog progressDialog;
                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
            }
        });
+
+
+
         completeTextView =findViewById(R.id.searchac);
         completeTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -319,7 +340,57 @@ ProgressDialog progressDialog;
             }
         });
 
+            Timer timer =new Timer();
+            timer.scheduleAtFixedRate(new ListScreen.TimewTask(),1500,2000);
     }
+
+    public class TimewTask extends java.util.TimerTask{
+        @Override
+        public void run() {
+            ListScreen.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    switch (viewPager.getCurrentItem()){
+                        case 0:viewPager.setCurrentItem(1);
+                            break;
+                        case 1:viewPager.setCurrentItem(0);
+                            break;
+
+
+                    }
+                }
+            });
+        }
+
+    }
+//    private void SearchData(String itme) {
+//        FirebaseDatabase.getInstance().getReference("item").child(itme)
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            String img = dataSnapshot.child("صورة المنتج").getValue(String.class);
+//                            String type = dataSnapshot.child("طريقة البيع").getValue(String.class);
+//                            String price = dataSnapshot.child("سعر البيع").getValue(String.class);
+//                            String tax = dataSnapshot.child("الضريبة").getValue(String.class);
+//                            System.out.println(tax+"        tax"   );
+////                           Double parseInt =Double.parseDouble(price);
+////                           Double taxint =Double.parseDouble(tax);
+////                           Double finalprice =(parseInt*taxint)+parseInt;
+//                            if (type.equals("فرط")){
+//                                numitem =dataSnapshot.child("عدد الحبات داخل الكرتونه").getValue(String.class);
+//                                search.add(new DataItem("أسم المنتج:"+"\t"+dataSnapshot.getKey(),"طريقة البيع:"+"\t"+type+"\t"+"عدد الحبات في الكرتونة ,"+numitem,"السعر:"+"\t"+price,img));
+//                            }
+//                            else { search.add(new DataItem("أسم المنتج:"+"\t"+dataSnapshot.getKey(),"طريقة البيع:"+"\t"+type+"\t","السعر:"+"\t"+price,img));}
+//                            recyclerView.setAdapter(adapter);
+//                        }
+//
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
 
     public void getData(){
         dataItems.clear();

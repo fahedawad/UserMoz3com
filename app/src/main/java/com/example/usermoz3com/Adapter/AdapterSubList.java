@@ -38,6 +38,7 @@ public class AdapterSubList extends RecyclerView.Adapter<AdapterSubList.ViewHold
         holder.pricetxt.setText(list.get(position).getPrice());
         holder.counter.setText(list.get(position).getI()+"");
         holder.total.setText(list.get(position).getTotal()+"");
+        holder.wieght.setText(list.get(position).getWieght());
         final String type =list.get(position).getType();
         if (type.equals("فرط")){
             holder.pases.setVisibility(View.VISIBLE);
@@ -55,6 +56,7 @@ public class AdapterSubList extends RecyclerView.Adapter<AdapterSubList.ViewHold
         TextView items;
         TextView counter;
         TextView total;
+        TextView wieght;
         public ViewHolder(@NonNull View item) {
             super(item);
             pricetxt =item.findViewById(R.id.price);
@@ -62,6 +64,7 @@ public class AdapterSubList extends RecyclerView.Adapter<AdapterSubList.ViewHold
             counter=item.findViewById(R.id.count);
             total = item.findViewById(R.id.total);
             pases =item.findViewById(R.id.pases);
+            wieght = item.findViewById(R.id.weight);
         }
     }
 }

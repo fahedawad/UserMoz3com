@@ -3,12 +3,22 @@ package com.example.usermoz3com.Data;
 public class itmeList {
     String name;
     String price;
-    int i;
+    double i;
     String date;
     String username;
     String uid;
     double total,tax4,tax10,tax16;
     String type;
+    String wieght;
+    String c;
+
+    public String getWieght() {
+        return wieght;
+    }
+
+    public void setWieght(String wieght) {
+        this.wieght = wieght;
+    }
 
     public String getType() {
         return type;
@@ -25,7 +35,7 @@ public class itmeList {
         this.price = price;
     }
 
-    public Integer getI() {
+    public Double getI() {
         return i;
     }
 
@@ -72,7 +82,7 @@ public class itmeList {
         this.tax16 = tax16;
     }
 
-    public itmeList(String name, String price, int i, String date, String username, String uid, double total, String type, double tax10, double tax16) {
+    public itmeList(String name, String price, double i, String date, String username, String uid, double total, String type, double tax10, double tax16,String wieght) {
         this.name = name;
         this.price = price;
         this.i = i;
@@ -83,6 +93,7 @@ public class itmeList {
         this.type = type;
         this.tax10 = tax10;
         this.tax16 = tax16;
+        this.wieght=wieght;
     }
 
     public itmeList(String name, Integer i, String date) {

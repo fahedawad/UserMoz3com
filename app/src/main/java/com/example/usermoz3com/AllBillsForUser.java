@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 
@@ -29,11 +30,16 @@ public class AllBillsForUser extends AppCompatActivity {
     static ArrayList<itmeList> ncdlist;
     static ArrayList<String> datelist , uidlist;
     public ArrayList <List<itmeList>> list;
+    String wieght;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_bills_for_user);
         recyclerView =findViewById(R.id.all);
+        progressDialog =new ProgressDialog(this);
+        progressDialog.setMessage("جاري تحميل المعلومات");
+        progressDialog.show();
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager =new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -61,11 +67,11 @@ public class AllBillsForUser extends AppCompatActivity {
         });
     }
     public void getitem (){
-
         FirebaseDatabase.getInstance().getReference("order").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
+                    progressDialog.dismiss();
                     for (DataSnapshot ds : dataSnapshot.getChildren()) // dates
                     {
                         ncdlist.clear();
@@ -73,11 +79,12 @@ public class AllBillsForUser extends AppCompatActivity {
                         {
                             if (ds1.getKey().equals("طريقة الدفع")){ }
                             else {
-
-                                int i = Integer.parseInt(ds1.child("العدد").getValue(String.class));
+                                Double i = Double.parseDouble(ds1.child("العدد").getValue(String.class));
                                 Double total = Double.parseDouble(ds1.child("المجموع").getValue(String.class));
-
-                                ncdlist.add(new itmeList(ds1.getKey(), ds1.child("السعر").getValue(String.class), i,ds.getKey(), name,id, total,  ds1.child("نوع البيع").getValue(String.class), total, total));
+                                if (ds1.hasChild("الوزن")){
+                                     wieght = ds1.child("الوزن").getValue(String.class);
+                                }else wieght ="--";
+                                ncdlist.add(new itmeList(ds1.getKey(), ds1.child("السعر").getValue(String.class), i,ds.getKey(), name,id, total,  ds1.child("نوع البيع").getValue(String.class), total, total,wieght));
                             }
                         }
                         ArrayList<itmeList> ncdlist1 = new ArrayList<>();
