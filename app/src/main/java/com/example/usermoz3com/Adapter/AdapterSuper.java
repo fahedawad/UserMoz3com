@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,7 +69,8 @@ public class AdapterSuper extends RecyclerView.Adapter<AdapterSuper.ViewHolder> 
         itemlistrec.setItemAnimator(new DefaultItemAnimator());
         addList = new AdapterSubList(context,list.get(position));
         holder.date.setText(list.get(position).get(0).getDate());
-
+        final DecimalFormat df = new DecimalFormat("#.###");
+        df.setRoundingMode(RoundingMode.CEILING);
         itemlistrec.setAdapter(addList);
         dates = new ArrayList<>();
         taxsum04 = 0.0;
@@ -113,7 +116,7 @@ public class AdapterSuper extends RecyclerView.Adapter<AdapterSuper.ViewHolder> 
                                         y += taxsum04;
                                         System.out.println(y + "         y");
 
-                                        tax.setText("ضريبة المبيعات 0.04:" + "\t" + "\t" + y);
+                                        tax.setText("ضريبة المبيعات 0.04:" + "\t" + "\t" + df.format(y));
                                     } else {
                                         tax.setText("ضريبة المبيعات 0.04:" + "\t" + "\t" + y);
                                     }
@@ -121,19 +124,19 @@ public class AdapterSuper extends RecyclerView.Adapter<AdapterSuper.ViewHolder> 
                                     if (tax4 == 0.10) {
                                         taxsum10 = tax4 * total;
                                         x += taxsum10;
-                                        holder.tax10.setText("ضريبة المبيعات 0.10:" + "\t" + "\t" + x);
+                                        holder.tax10.setText("ضريبة المبيعات 0.10:" + "\t" + "\t" + df.format(x));
                                     } else {
                                         holder.tax10.setText("ضريبة المبيعات 0.10:" + "\t" + "\t" + x);
                                     }
                                     if (tax4 == 0.16) {
                                         taxsum16 = tax4 * total;
                                         z += taxsum16;
-                                        holder.tax16.setText("ضريبة المبيعات %16:" + "\t" + "\t" + z);
+                                        holder.tax16.setText("ضريبة المبيعات %16:" + "\t" + "\t" + df.format(z));
                                     } else {
                                         holder.tax16.setText("ضريبة المبيعات %16:" + "\t" + "\t" + z);
                                     }
                                     sum2 = y + x + z + sum;
-                                    holder.totaloftotal.setText("السعر شامل الضريبة:" + "\t" + "\t" + sum2);
+                                    holder.totaloftotal.setText("السعر شامل الضريبة:" + "\t" + "\t" + df.format(sum2));
                                 }
                             }
 

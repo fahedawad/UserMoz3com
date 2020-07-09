@@ -35,7 +35,11 @@ public class OrdarAdapter extends RecyclerView.Adapter<OrdarAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.price.setText(ordarData.get(position).getPrice());
         holder.count.setText(ordarData.get(position).getConter());
-        holder.total.setText(ordarData.get(position).getTotal());
+        if(ordarData.get(position).getType().equals("كيلو")){
+            holder.total.setText("بانتظار المعاينة");
+        }
+        else { holder.total.setText(ordarData.get(position).getTotal());}
+
         holder.name.setText(ordarData.get(position).getName());
     }
 

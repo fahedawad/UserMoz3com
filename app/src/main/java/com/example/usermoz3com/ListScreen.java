@@ -37,6 +37,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,50 +110,52 @@ ProgressDialog progressDialog;
        order= findViewById(R.id.push);
         ordarData =new ArrayList<>();
         sharedPreference.removeallFavorite(ListScreen.this);
+        final DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
         order.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                ordarData.clear();
-
-                    final Dialog dialog =new Dialog(ListScreen.this);
-                    dialog.setContentView(R.layout.orderdialog);
-                    final RecyclerView orderrec =dialog.findViewById(R.id.orderrec);
+               final Dialog dialog = new Dialog(ListScreen.this);
+               dialog.setContentView(R.layout.orderdialog);
+               final RecyclerView orderrec = dialog.findViewById(R.id.orderrec);
                final Button ordernow = dialog.findViewById(R.id.ordernow);
                Button cancle = dialog.findViewById(R.id.cancle);
                orderrec.setHasFixedSize(true);
                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ListScreen.this, LinearLayoutManager.VERTICAL, false);
                orderrec.setLayoutManager(linearLayoutManager);
                orderrec.setItemAnimator(new DefaultItemAnimator());
-              arrayList =sharedPreference.getFavorites(ListScreen.this);
-               for (int i =0;i<arrayList.size();i++){
-                   HashMap<String,Object>map =arrayList.get(i);
-                   ordarData.add(new OrdarData(map.get("name")+"",map.get("price")+"",map.get("count")+"",map.get("type")+"",map.get("tax")+"",map.get("total")+""));
+               if (sharedPreference.getFavorites(ListScreen.this) != null && sharedPreference.getFavorites(ListScreen.this).size() != 0){
+                   arrayList = sharedPreference.getFavorites(ListScreen.this);
+               for (int i = 0; i < arrayList.size(); i++) {
+                   HashMap<String, Object> map = arrayList.get(i);
+                   ordarData.add(new OrdarData(map.get("name") + "", map.get("price") + "", map.get("count") + "", map.get("type") + "", map.get("tax") + "", map.get("total") + ""));
                }
-               OrdarAdapter ordarAdapter =new OrdarAdapter(ordarData,ListScreen.this);
+               OrdarAdapter ordarAdapter = new OrdarAdapter(ordarData, ListScreen.this);
                orderrec.setAdapter(ordarAdapter);
                ordernow.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
                        progressDialog.show();
-                       for (int i =0;i <arrayList.size();i++){
-                           HashMap<String,Object> map =arrayList.get(i);
-                           final DatabaseReference reference =FirebaseDatabase.getInstance().getReference("order").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                   .child(datetxt).child(map.get("name")+"");
+                       for (int i = 0; i < arrayList.size(); i++) {
+                           HashMap<String, Object> map = arrayList.get(i);
+                           final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("order").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                   .child(datetxt).child(map.get("name") + "");
                            final int finalI = i;
                            reference.addListenerForSingleValueEvent(new ValueEventListener() {
                                @Override
                                public void onDataChange(@NonNull final DataSnapshot snapshot) {
-                                   if(snapshot.exists()) {
+                                   if (snapshot.exists()) {
                                        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("item")
                                                .child(ordarData.get(finalI).getName());
-                                         ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                       ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                            @Override
                                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
                                                final String purchasingprice = snapshot1.child("سعر الشراء").getValue(String.class);
                                                final Double inventorycount = Double.parseDouble(snapshot1.child("العدد المتاح").getValue(String.class));
                                                Double currentcounter = Double.parseDouble(ordarData.get(finalI).getConter());
-                                               Double newinventorycount = inventorycount-currentcounter;
-                                               ref.child("العدد المتاح").setValue(newinventorycount+"");
+                                               Double newinventorycount = inventorycount - currentcounter;
+                                               ref.child("العدد المتاح").setValue(newinventorycount + "");
                                                double oldcount = Double.parseDouble(snapshot.child("العدد").getValue(String.class) + "");
                                                final double currentcount = Double.parseDouble(ordarData.get(finalI).getConter() + "");
                                                double newcount = oldcount + currentcount;
@@ -161,15 +165,14 @@ ProgressDialog progressDialog;
                                                HashMap<String, Object> hashMap = new HashMap<>();
                                                hashMap.put("السعر", ordarData.get(finalI).getPrice());
                                                hashMap.put("العدد", newcount + "");
-                                               if(ordarData.get(finalI).getType().equals("كيلو")){
+                                               if (ordarData.get(finalI).getType().equals("كيلو")) {
                                                    hashMap.put("المجموع", "0.0");
-                                               }
-                                               else {
+                                               } else {
                                                    hashMap.put("المجموع", newtotal + "");
                                                }
                                                hashMap.put("الضريبه", ordarData.get(finalI).getTax());
                                                hashMap.put("نوع البيع", ordarData.get(finalI).getType());
-                                               hashMap.put("سعر الشراء",purchasingprice+"");
+                                               hashMap.put("سعر الشراء", purchasingprice + "");
                                                reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
                                                    @Override
                                                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -184,41 +187,40 @@ ProgressDialog progressDialog;
                                                        FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                            @Override
                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                               if(snapshot.exists()){
+                                                               if (snapshot.exists()) {
                                                                    Double old_count = Double.parseDouble(snapshot.child("العدد").getValue(String.class));
-                                                                   Double new_count = old_count+currentcount;
-                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(new_count+"");
-                                                                   Double  old_inventory = Double.parseDouble(snapshot.child("العدد المتاح").getValue(String.class));
-                                                                   Double new_inventory = old_inventory-currentcount;
-                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد المتاح").setValue(new_inventory+"");
+                                                                   Double new_count = old_count + currentcount;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(df.format(new_count) + "");
+                                                                   Double old_inventory = Double.parseDouble(snapshot.child("العدد المتاح").getValue(String.class));
+                                                                   Double new_inventory = old_inventory - currentcount;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد المتاح").setValue(df.format(new_inventory) + "");
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("سعر الشراء").setValue(purchasingprice);
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("سعر البيع").setValue(ordarData.get(finalI).getPrice());
-                                                                   Double total_purchasing_price = Double.parseDouble(purchasingprice)*currentcount;
+                                                                   Double total_purchasing_price = Double.parseDouble(purchasingprice) * currentcount;
                                                                    Double purchasing_price_with_tax = (total_purchasing_price * Double.parseDouble(ordarData.get(finalI).getTax())) + total_purchasing_price;
                                                                    Double total_selling_price = Double.parseDouble(ordarData.get(finalI).getPrice()) * currentcount;
-                                                                   Double selling_price_with_tax  = (total_selling_price*Double.parseDouble(ordarData.get(finalI).getTax())) + total_selling_price;
-                                                                   Double profit = selling_price_with_tax - purchasing_price_with_tax ;
+                                                                   Double selling_price_with_tax = (total_selling_price * Double.parseDouble(ordarData.get(finalI).getTax())) + total_selling_price;
+                                                                   Double profit = selling_price_with_tax - purchasing_price_with_tax;
                                                                    Double old_profit = Double.parseDouble(snapshot.child("الربح").getValue(String.class));
-                                                                   Double new_profit = old_profit + profit ;
-                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("الربح").setValue(new_profit+"");
+                                                                   Double new_profit = old_profit + profit;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("الربح").setValue(df.format(new_profit) + "");
                                                                    Double old_total = Double.parseDouble(snapshot.child("المجموع").getValue(String.class));
                                                                    Double new_total = old_total + selling_price_with_tax;
-                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(new_total+"");
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(df.format(new_total) + "");
 
-                                                               }
-                                                               else {
-                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(currentcount+"");
+                                                               } else {
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(currentcount + "");
                                                                    Double new_inventory = inventorycount - currentcount;
-                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد المتاح").setValue(new_inventory+"");
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد المتاح").setValue(new_inventory + "");
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("سعر الشراء").setValue(purchasingprice);
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("سعر البيع").setValue(ordarData.get(finalI).getPrice());
-                                                                   Double total_purchasing_price = Double.parseDouble(purchasingprice)*currentcount;
+                                                                   Double total_purchasing_price = Double.parseDouble(purchasingprice) * currentcount;
                                                                    Double purchasing_price_with_tax = (total_purchasing_price * Double.parseDouble(ordarData.get(finalI).getTax())) + total_purchasing_price;
                                                                    Double total_selling_price = Double.parseDouble(ordarData.get(finalI).getPrice()) * currentcount;
-                                                                   Double selling_price_with_tax  = (total_selling_price*Double.parseDouble(ordarData.get(finalI).getTax())) + total_selling_price;
-                                                                   Double profit = selling_price_with_tax - purchasing_price_with_tax ;
-                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("الربح").setValue(profit+"");
-                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(selling_price_with_tax+"");
+                                                                   Double selling_price_with_tax = (total_selling_price * Double.parseDouble(ordarData.get(finalI).getTax())) + total_selling_price;
+                                                                   Double profit = selling_price_with_tax - purchasing_price_with_tax;
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("الربح").setValue(df.format(profit) + "");
+                                                                   FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(df.format(selling_price_with_tax) + "");
                                                                }
                                                            }
 
@@ -239,30 +241,28 @@ ProgressDialog progressDialog;
                                            }
                                        });
 
-                                   }
-                                   else {
+                                   } else {
                                        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("item")
                                                .child(ordarData.get(finalI).getName());
-                                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                       ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                            @Override
                                            public void onDataChange(@NonNull DataSnapshot snapshot1) {
                                                String purchasingprice = snapshot1.child("سعر الشراء").getValue(String.class);
                                                Double inventorycount = Double.parseDouble(snapshot1.child("العدد المتاح").getValue(String.class));
                                                Double currentcounter = Double.parseDouble(ordarData.get(finalI).getConter());
-                                               Double newinventorycount = inventorycount-currentcounter;
-                                               ref.child("العدد المتاح").setValue(newinventorycount+"");
+                                               Double newinventorycount = inventorycount - currentcounter;
+                                               ref.child("العدد المتاح").setValue(newinventorycount + "");
                                                HashMap<String, Object> hashMap = new HashMap<>();
                                                hashMap.put("السعر", ordarData.get(finalI).getPrice());
                                                hashMap.put("العدد", ordarData.get(finalI).getConter());
-                                               if(ordarData.get(finalI).getType().equals("كيلو")){
+                                               if (ordarData.get(finalI).getType().equals("كيلو")) {
                                                    hashMap.put("المجموع", "0.0");
-                                               }
-                                               else {
-                                                   hashMap.put("المجموع", ordarData.get(finalI).getTotal()+"");
+                                               } else {
+                                                   hashMap.put("المجموع", ordarData.get(finalI).getTotal() + "");
                                                }
                                                hashMap.put("الضريبه", ordarData.get(finalI).getTax());
                                                hashMap.put("نوع البيع", ordarData.get(finalI).getType());
-                                               hashMap.put("سعر الشراء",purchasingprice+"");
+                                               hashMap.put("سعر الشراء", purchasingprice + "");
                                                reference.updateChildren(hashMap, new DatabaseReference.CompletionListener() {
                                                    @Override
                                                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -309,8 +309,13 @@ ProgressDialog progressDialog;
                    }
                });
                dialog.show();
-               Window window =dialog.getWindow();
-               window.setLayout(LinearLayout.LayoutParams.FILL_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+               Window window = dialog.getWindow();
+               window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+           }
+
+               else {
+                   Toast.makeText(ListScreen.this, "اختر الاصناف اولا", Toast.LENGTH_SHORT).show();
+               }
            }
        });
 
