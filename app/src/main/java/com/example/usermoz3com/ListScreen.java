@@ -188,6 +188,7 @@ ProgressDialog progressDialog;
                                                            @Override
                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                if (snapshot.exists()) {
+                                                                   System.out.println("if");
                                                                    Double old_count = Double.parseDouble(snapshot.child("العدد").getValue(String.class));
                                                                    Double new_count = old_count + currentcount;
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(df.format(new_count) + "");
@@ -209,6 +210,7 @@ ProgressDialog progressDialog;
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(df.format(new_total) + "");
 
                                                                } else {
+                                                                   System.out.println("else");
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(currentcount + "");
                                                                    Double new_inventory = inventorycount - currentcount;
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد المتاح").setValue(new_inventory + "");
@@ -226,7 +228,7 @@ ProgressDialog progressDialog;
 
                                                            @Override
                                                            public void onCancelled(@NonNull DatabaseError error) {
-
+                                                               System.out.println(error.toString() + "error                         "        );
                                                            }
                                                        });
                                                        Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
