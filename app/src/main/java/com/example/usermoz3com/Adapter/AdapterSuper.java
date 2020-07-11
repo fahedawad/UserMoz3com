@@ -82,7 +82,7 @@ public class AdapterSuper extends RecyclerView.Adapter<AdapterSuper.ViewHolder> 
         y = 0.0;
         z = 0.0;
         total = 0.0;
-        System.out.println(position + "          pos");
+
 
              final int finalI = 0;
             FirebaseDatabase.getInstance().getReference("order").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(list.get(position).get(0).getDate()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -114,7 +114,7 @@ public class AdapterSuper extends RecyclerView.Adapter<AdapterSuper.ViewHolder> 
                                     if (tax4 == 0.04) {
                                         taxsum04 = tax4 * total;
                                         y += taxsum04;
-                                        System.out.println(y + "         y");
+
 
                                         tax.setText("ضريبة المبيعات 0.04:" + "\t" + "\t" + df.format(y));
                                     } else {

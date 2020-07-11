@@ -57,7 +57,7 @@ public class AllBillsForUser extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 name =dataSnapshot.child("name").getValue(String.class);
-                System.out.println(name);
+
             }
 
             @Override

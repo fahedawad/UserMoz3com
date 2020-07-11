@@ -70,13 +70,10 @@ ProgressDialog progressDialog;
     ViewPager viewPager;
     ViewPag pag;
     List<Pager>pagers;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_screen);
-
         strings =new ArrayList<>();
         search =new ArrayList<>();
         progressDialog =new ProgressDialog(this);
@@ -101,7 +98,6 @@ ProgressDialog progressDialog;
         pagers.add(new Pager("id",R.drawable.p1));
         pagers.add(new Pager("id",R.drawable.p2));
         viewPager.setAdapter(pag);
-        System.out.println(format.format(date)+"");
         LinearLayoutManager l =new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         GridLayoutManager gridLayoutManager =new GridLayoutManager(this,2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -183,12 +179,11 @@ ProgressDialog progressDialog;
                                                        sharedPreference.removeallFavorite(ListScreen.this);
                                                        FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
                                                                .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
-
                                                        FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                            @Override
                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                if (snapshot.exists()) {
-                                                                   System.out.println("if");
+                                                                   System.out.println("jard if");
                                                                    Double old_count = Double.parseDouble(snapshot.child("العدد").getValue(String.class));
                                                                    Double new_count = old_count + currentcount;
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(df.format(new_count) + "");
@@ -208,9 +203,8 @@ ProgressDialog progressDialog;
                                                                    Double old_total = Double.parseDouble(snapshot.child("المجموع").getValue(String.class));
                                                                    Double new_total = old_total + selling_price_with_tax;
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(df.format(new_total) + "");
-
                                                                } else {
-                                                                   System.out.println("else");
+                                                                   System.out.println("jard else");
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد").setValue(currentcount + "");
                                                                    Double new_inventory = inventorycount - currentcount;
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("العدد المتاح").setValue(new_inventory + "");
@@ -225,24 +219,21 @@ ProgressDialog progressDialog;
                                                                    FirebaseDatabase.getInstance().getReference("jard").child(datetxt).child(ordarData.get(finalI).getName()).child("المجموع").setValue(df.format(selling_price_with_tax) + "");
                                                                }
                                                            }
-
                                                            @Override
                                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                               System.out.println(error.toString() + "error                         "        );
+                                                               System.out.println("mosab");
+                                                               System.out.println(error.toString());
                                                            }
                                                        });
                                                        Toast.makeText(ListScreen.this, "تم نحميل الطلبية ", Toast.LENGTH_SHORT).show();
                                                        dialog.dismiss();
                                                    }
                                                });
-
                                            }
-
                                            @Override
                                            public void onCancelled(@NonNull DatabaseError error) {
                                            }
                                        });
-
                                    } else {
                                        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("item")
                                                .child(ordarData.get(finalI).getName());
@@ -277,31 +268,21 @@ ProgressDialog progressDialog;
                                                        sharedPreference.removeallFavorite(ListScreen.this);
                                                        FirebaseDatabase.getInstance().getReference("ordernotifi").child("orderauth")
                                                                .setValue(FirebaseAuth.getInstance().getUid() + new Date() + "");
-
                                                    }
                                                });
-
-
                                            }
-
                                            @Override
                                            public void onCancelled(@NonNull DatabaseError error) {
                                            }
                                        });
-
                                    }
-
                                }
 
                                @Override
                                public void onCancelled(@NonNull DatabaseError error) {
-
                                }
                            });
-
                        }
-
-
                    }
                });
                cancle.setOnClickListener(new View.OnClickListener() {
@@ -314,20 +295,15 @@ ProgressDialog progressDialog;
                Window window = dialog.getWindow();
                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
            }
-
                else {
                    Toast.makeText(ListScreen.this, "اختر الاصناف اولا", Toast.LENGTH_SHORT).show();
                }
            }
        });
-
-
-
         completeTextView =findViewById(R.id.searchac);
         completeTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-
                 recyclerView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -340,35 +316,31 @@ ProgressDialog progressDialog;
                                 break;
                             }
                         }
-                        System.out.println("Position " + pos);
                         recyclerView.smoothScrollToPosition(pos);
                     }
                 });
             }
         });
-
             Timer timer =new Timer();
             timer.scheduleAtFixedRate(new ListScreen.TimewTask(),1500,2000);
     }
-
-    public class TimewTask extends java.util.TimerTask{
+    public class TimewTask extends java.util.TimerTask {
         @Override
         public void run() {
             ListScreen.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    switch (viewPager.getCurrentItem()){
-                        case 0:viewPager.setCurrentItem(1);
+                    switch (viewPager.getCurrentItem()) {
+                        case 0:
+                            viewPager.setCurrentItem(1);
                             break;
-                        case 1:viewPager.setCurrentItem(0);
+                        case 1:
+                            viewPager.setCurrentItem(0);
                             break;
-
-
                     }
                 }
             });
         }
-
     }
 //    private void SearchData(String itme) {
 //        FirebaseDatabase.getInstance().getReference("item").child(itme)
@@ -428,7 +400,6 @@ ProgressDialog progressDialog;
                             adapter =new Adapter(dataItems,ListScreen.this);
                             recyclerView.setAdapter(adapter);
                         }
-                        System.out.println(strings);
                         datanames = new String[strings.size()];
                         datanames = strings.toArray(datanames);
                         ArrayAdapter<String>adapter =new ArrayAdapter<String>(ListScreen.this,android.R.layout.simple_dropdown_item_1line,datanames);
@@ -442,12 +413,10 @@ ProgressDialog progressDialog;
                     }
                 });
     }
-
     public void upload_jard (final HashMap<String, Object> hashMap , String name){
         format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         date =new Date();
         datetxt =format.format(date);
-
     }
     @Override
     public void onBackPressed() {

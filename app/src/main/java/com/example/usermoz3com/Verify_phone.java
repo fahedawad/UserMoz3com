@@ -68,7 +68,6 @@ public class Verify_phone extends AppCompatActivity {
                  startActivity(new Intent(Verify_phone.this,MainActivity.class));
              }
          });
-        System.out.println(phonNumber);
          name =getIntent().getStringExtra("name");
         editText =findViewById(R.id.verify);
         button =findViewById(R.id.ok);
@@ -88,7 +87,7 @@ public class Verify_phone extends AppCompatActivity {
         });
     }
     private  void sendVerificationCode( String number){
-        System.out.println("sdsdsdsdsd"+"       fahed");
+
         PhoneAuthProvider .getInstance().verifyPhoneNumber(
                 number,
                 60,
@@ -100,7 +99,7 @@ public class Verify_phone extends AppCompatActivity {
     }
     private void verifyCode(String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verify,code);
-        System.out.println("dsadasd");
+
         sinInWithCredential(credential);
     }
 
@@ -109,7 +108,6 @@ public class Verify_phone extends AppCompatActivity {
                 addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        System.out.println("dsadasd");
                             if (task.isSuccessful()){
                                 String id =FirebaseAuth.getInstance().getCurrentUser().getUid();
                                 HashMap<String,Object>hashMap =new HashMap<>();

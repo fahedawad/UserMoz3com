@@ -104,7 +104,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                                             holder.count.setError("العدد المدخل اعلى من العدد الحالي في المتجر يرجى ادخال عدد اقل");
                                             holder.checkBox.setChecked(false);
                                             sharedPreference.getFavoritewithname(context,dataItems.get(position).getName());
-                                            System.out.println(dataItems.get(position).getName());
+
                                         }
                                         else {
                                             holder.checkBox.setChecked(false);
@@ -137,7 +137,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                                 try {
                                     price =Double.parseDouble(dataItems.get(position).getPrice());
                                     toloa =price*i;
-                                    System.out.println(toloa);
                                 }catch (NullPointerException e){}
 
                                 hashMap.put("total",toloa);
