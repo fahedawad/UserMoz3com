@@ -389,20 +389,14 @@ ProgressDialog progressDialog;
                                 Double parseInt =Double.parseDouble(price);
                                 Double taxint =Double.parseDouble(tax);
                                 finalprice =(parseInt*taxint)+parseInt;
-                            }catch (NullPointerException e){
-
-                            }
-                            if (type.equals("فرط")){
-                                numitem =s1.child("عدد الحبات داخل الكرتونه").getValue(String.class);
-                                dataItems.add(new DataItem(s1.getKey(),type,finalprice+"",img,"",tax));
-                            }
-                           else {dataItems.add(new DataItem(s1.getKey(),type,price,img,"",tax));}
+                            }catch (NullPointerException ignored){}
+                            dataItems.add(new DataItem(s1.getKey(),type,price,img,"",tax));
                             adapter =new Adapter(dataItems,ListScreen.this);
                             recyclerView.setAdapter(adapter);
                         }
                         datanames = new String[strings.size()];
                         datanames = strings.toArray(datanames);
-                        ArrayAdapter<String>adapter =new ArrayAdapter<String>(ListScreen.this,android.R.layout.simple_dropdown_item_1line,datanames);
+                        ArrayAdapter<String>adapter = new ArrayAdapter<>(ListScreen.this, android.R.layout.simple_dropdown_item_1line, datanames);
                         completeTextView.setThreshold(1);
                         completeTextView.setAdapter(adapter);
                     }
