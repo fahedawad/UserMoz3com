@@ -342,35 +342,6 @@ ProgressDialog progressDialog;
             });
         }
     }
-//    private void SearchData(String itme) {
-//        FirebaseDatabase.getInstance().getReference("item").child(itme)
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            String img = dataSnapshot.child("صورة المنتج").getValue(String.class);
-//                            String type = dataSnapshot.child("طريقة البيع").getValue(String.class);
-//                            String price = dataSnapshot.child("سعر البيع").getValue(String.class);
-//                            String tax = dataSnapshot.child("الضريبة").getValue(String.class);
-//                            System.out.println(tax+"        tax"   );
-////                           Double parseInt =Double.parseDouble(price);
-////                           Double taxint =Double.parseDouble(tax);
-////                           Double finalprice =(parseInt*taxint)+parseInt;
-//                            if (type.equals("فرط")){
-//                                numitem =dataSnapshot.child("عدد الحبات داخل الكرتونه").getValue(String.class);
-//                                search.add(new DataItem("أسم المنتج:"+"\t"+dataSnapshot.getKey(),"طريقة البيع:"+"\t"+type+"\t"+"عدد الحبات في الكرتونة ,"+numitem,"السعر:"+"\t"+price,img));
-//                            }
-//                            else { search.add(new DataItem("أسم المنتج:"+"\t"+dataSnapshot.getKey(),"طريقة البيع:"+"\t"+type+"\t","السعر:"+"\t"+price,img));}
-//                            recyclerView.setAdapter(adapter);
-//                        }
-//
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
-
     public void getData(){
         dataItems.clear();
         recyclerView.setAdapter(null);
