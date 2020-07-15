@@ -52,7 +52,6 @@ RecyclerView recyclerView;
 Adapter adapter;
 List<DataItem>dataItems;
 List<DataItem>search;
-String numitem;
 AutoCompleteTextView completeTextView;
 List<String>strings;
 String [] datanames;
@@ -377,11 +376,6 @@ ProgressDialog progressDialog;
 
                     }
                 });
-    }
-    public void upload_jard (final HashMap<String, Object> hashMap , String name){
-        format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-        date =new Date();
-        datetxt =format.format(date);
     }
     @Override
     public void onBackPressed() {
