@@ -90,7 +90,7 @@ ProgressDialog progressDialog;
         getData();
         format =new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
         date =new Date();
-        datetxt =format.format(date);
+        datetxt =convertToEnglish(format.format(date));
         viewPager =findViewById(R.id.viewPager);
         pagers =new ArrayList<>();
         pag =new ViewPag(this,pagers);
@@ -437,5 +437,10 @@ ProgressDialog progressDialog;
             Toast.makeText(this, "أذا كنت تريد الخروج أضغط مره اخرى", Toast.LENGTH_SHORT).show();
         }
         backPressed =System.currentTimeMillis();
+    }
+    public static String convertToEnglish(String value)
+    {
+        String newValue =   (((((((((((value+"").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
     }
 }
