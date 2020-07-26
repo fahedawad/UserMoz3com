@@ -157,7 +157,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 else {
                     sharedPreference.getFavoritewithname(context, dataItems.get(position).getName());
                 }
-
             }
         });
     }
@@ -167,10 +166,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         return dataItems.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        return position ;
     }
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView name ,price,type;

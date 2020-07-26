@@ -45,7 +45,7 @@ public class Verify_phone extends AppCompatActivity {
          dialog.setMessage("جاري التحقق");
          phonNumber =getIntent().getStringExtra("num");
          title =findViewById(R.id.title);
-         String p = phonNumber.substring(4,14);
+         String p = phonNumber.substring(4,13);
          title.setText("سوف يرسل MOZ3.COM رسالة "+"\n"+"نصية للتحقق من رقم هاتفك"+"\t"+"\t"+p);
          timer =findViewById(R.id.timer);
          CountDownTimer countDownTimer;

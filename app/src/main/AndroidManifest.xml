@@ -12,7 +12,7 @@
 
         <activity android:name=".AllBillsForUser" />
 
-        <activity android:name=".ListScreen"></activity>
+        <activity android:name=".ListScreen" />
         <activity android:name=".Verify_phone" />
         <activity android:name=".MainActivity">
             <intent-filter>
